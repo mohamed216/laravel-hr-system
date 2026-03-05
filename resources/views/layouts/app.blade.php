@@ -102,11 +102,11 @@
                         <i class="fas fa-star me-2"></i> {{ __('Performance') }}
                     </a>
                     @auth
-                    @if(Auth::user()->isAdmin() || Auth::user()->isHR())
+                    @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="fas fa-cogs me-2"></i> {{ __('Admin') }}
                     </a>
-                    @if(Auth::user()->isAdmin())
+                    @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.reports.index') }}" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
                         <i class="fas fa-chart-bar me-2"></i> {{ __('Reports') }}
                     </a>
@@ -145,10 +145,10 @@
                         @auth
                         <div class="dropdown">
                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i> {{ Auth::user()->name }}
+                                <i class="fas fa-user me-1"></i> {{ auth()->user()->name }}
                             </button>
                             <ul class="dropdown-menu">
-                                <li><span class="dropdown-item-text">{{ Auth::user()->role }}</span></li>
+                                <li><span class="dropdown-item-text">{{ auth()->user()->role }}</span></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
