@@ -23,7 +23,8 @@ use App\Http\Controllers\AuthController;
 */
 
 // Language Routes
-Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
+Route::middleware('language')->group(function () {
+    Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
 
 // Auth Routes
 Route::middleware('guest')->group(function () {
@@ -101,4 +102,5 @@ Route::middleware('auth')->group(function () {
     // Performance Reviews
     Route::resource('performance', PerformanceReviewController::class);
     Route::get('performance/employee/{employeeId}', [PerformanceReviewController::class, 'getByEmployee'])->name('performance.employee');
+});
 });

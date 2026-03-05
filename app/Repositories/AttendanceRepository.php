@@ -13,7 +13,7 @@ class AttendanceRepository
         return Attendance::with('employee')->get();
     }
 
-    public function getById(int $id): ?Attendance
+    public function getById($id): ?Attendance
     {
         return Attendance::with('employee')->find($id);
     }
