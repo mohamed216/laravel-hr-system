@@ -24,7 +24,7 @@ class AttendanceController extends Controller
         return view('attendance.index', compact('attendances'));
     }
 
-    public function show(int $id)
+    public function show($id)
     {
         $attendance = $this->attendanceRepository->getById($id);
         if (!$attendance) {
