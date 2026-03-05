@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value): void
     {
-        $this->attributes['password'] = Hash::needsRehashing($value) ? Hash::make($value) : $value;
+        $this->attributes['password'] = Hash::make($value);
     }
 
     public static function boot(): void
