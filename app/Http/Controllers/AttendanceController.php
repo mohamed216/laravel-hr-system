@@ -64,6 +64,17 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', __('Check in successful'));
     }
 
+    public function generate(Request $request)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'date' => 'required|date',
+        ]);
+        
+        $this->attendanceRepository->create($validated);
+        return redirect()->back()->with('success', __('Attendance generated'));
+    }
+
     public function checkOut(Request $request)
     {
         $validated = $request->validate([

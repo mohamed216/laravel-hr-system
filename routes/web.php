@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('attendance/today', [AttendanceController::class, 'today'])->name('attendance.today');
     Route::get('attendance/employee/{employeeId}', [AttendanceController::class, 'employeeAttendance'])->name('attendance.employee');
     Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('attendance/generate', [AttendanceController::class, 'generate'])->name('attendance.generate');
     Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
 
     // Leave Requests
