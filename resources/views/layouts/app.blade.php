@@ -103,12 +103,21 @@
                     </a>
                     @auth
                     @if(Auth::user()->isAdmin() || Auth::user()->isHR())
-                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="fas fa-cogs me-2"></i> {{ __('Admin') }}
                     </a>
                     @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.reports.index') }}" class="{{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
+                        <i class="fas fa-chart-bar me-2"></i> {{ __('Reports') }}
+                    </a>
+                    <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                        <i class="fas fa-cog me-2"></i> {{ __('Settings') }}
+                    </a>
                     <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                         <i class="fas fa-user-shield me-2"></i> {{ __('Users') }}
+                    </a>
+                    <a href="{{ route('admin.activity') }}" class="{{ request()->routeIs('admin.activity') ? 'active' : '' }}">
+                        <i class="fas fa-history me-2"></i> {{ __('Logs') }}
                     </a>
                     @endif
                     @endif

@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
@@ -33,19 +36,38 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Dashboard - Different for admin
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [DashboardController::class, 'index']);
 
-    // Admin Routes (Admin & HR only)
+    // Admin Routes (Admin only)
     Route::middleware('App\Http\Middleware\AdminMiddleware')->group(function () {
+        // Admin Dashboard
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+        
+        // Users Management
         Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
         Route::get('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
         Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
         Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
         Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+        
+        // Reports
+        Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
+        Route::get('/admin/reports/employees', [ReportController::class, 'employees'])->name('admin.reports.employees');
+        Route::get('/admin/reports/attendance', [ReportController::class, 'attendance'])->name('admin.reports.attendance');
+        Route::get('/admin/reports/payroll', [ReportController::class, 'payroll'])->name('admin.reports.payroll');
+        Route::get('/admin/reports/leaves', [ReportController::class, 'leaves'])->name('admin.reports.leaves');
+        
+        // Settings
+        Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings');
+        Route::post('/admin/settings', [SettingController::class, 'update'])->name('admin.settings.update');
+        Route::post('/admin/settings/clear-cache', [SettingController::class, 'clearCache'])->name('admin.settings.clearCache');
+        Route::get('/admin/settings/backup', [SettingController::class, 'backup'])->name('admin.settings.backup');
+        
+        // Activity Logs
+        Route::get('/admin/activity', [ActivityController::class, 'index'])->name('admin.activity');
     });
 
     // Employees
