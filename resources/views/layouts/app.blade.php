@@ -101,6 +101,18 @@
                     <a href="{{ route('performance.index') }}" class="{{ request()->routeIs('performance.*') ? 'active' : '' }}">
                         <i class="fas fa-star me-2"></i> {{ __('Performance') }}
                     </a>
+                    @auth
+                    @if(Auth::user()->isAdmin() || Auth::user()->isHR())
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.*') ? 'active' : '' }}">
+                        <i class="fas fa-cogs me-2"></i> {{ __('Admin') }}
+                    </a>
+                    @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield me-2"></i> {{ __('Users') }}
+                    </a>
+                    @endif
+                    @endif
+                    @endauth
                 </nav>
             </div>
             
