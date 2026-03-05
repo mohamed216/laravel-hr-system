@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceReviewController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,37 +21,50 @@ use App\Http\Controllers\LanguageController;
 // Language Routes
 Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
 
-// Dashboard
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// Auth Routes
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login']);
+    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [AuthController::class, 'register']);
+});
 
-// Employees
-Route::resource('employees', EmployeeController::class);
+Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index']);
 
-// Departments
-Route::resource('departments', DepartmentController::class);
+    // Employees
+    Route::resource('employees', EmployeeController::class);
 
-// Positions
-Route::resource('positions', PositionController::class);
-Route::get('positions/department/{departmentId}', [PositionController::class, 'getByDepartment'])->name('positions.byDepartment');
+    // Departments
+    Route::resource('departments', DepartmentController::class);
 
-// Attendance
-Route::resource('attendance', AttendanceController::class);
-Route::get('attendance/today', [AttendanceController::class, 'today'])->name('attendance.today');
-Route::get('attendance/employee/{employeeId}', [AttendanceController::class, 'employeeAttendance'])->name('attendance.employee');
-Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
-Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    // Positions
+    Route::resource('positions', PositionController::class);
+    Route::get('positions/department/{departmentId}', [PositionController::class, 'getByDepartment'])->name('positions.byDepartment');
 
-// Leave Requests
-Route::resource('leave', LeaveRequestController::class);
-Route::get('leave/pending', [LeaveRequestController::class, 'pending'])->name('leave.pending');
-Route::post('leave/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leave.approve');
-Route::post('leave/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leave.reject');
+    // Attendance
+    Route::resource('attendance', AttendanceController::class);
+    Route::get('attendance/today', [AttendanceController::class, 'today'])->name('attendance.today');
+    Route::get('attendance/employee/{employeeId}', [AttendanceController::class, 'employeeAttendance'])->name('attendance.employee');
+    Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
 
-// Payroll
-Route::resource('payroll', PayrollController::class);
-Route::post('payroll/generate', [PayrollController::class, 'generate'])->name('payroll.generate');
-Route::post('payroll/{id}/mark-paid', [PayrollController::class, 'markAsPaid'])->name('payroll.markPaid');
+    // Leave Requests
+    Route::resource('leave', LeaveRequestController::class);
+    Route::get('leave/pending', [LeaveRequestController::class, 'pending'])->name('leave.pending');
+    Route::post('leave/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leave.approve');
+    Route::post('leave/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leave.reject');
 
-// Performance Reviews
-Route::resource('performance', PerformanceReviewController::class);
-Route::get('performance/employee/{employeeId}', [PerformanceReviewController::class, 'getByEmployee'])->name('performance.employee');
+    // Payroll
+    Route::resource('payroll', PayrollController::class);
+    Route::post('payroll/generate', [PayrollController::class, 'generate'])->name('payroll.generate');
+    Route::post('payroll/{id}/mark-paid', [PayrollController::class, 'markAsPaid'])->name('payroll.markPaid');
+
+    // Performance Reviews
+    Route::resource('performance', PerformanceReviewController::class);
+    Route::get('performance/employee/{employeeId}', [PerformanceReviewController::class, 'getByEmployee'])->name('performance.employee');
+});

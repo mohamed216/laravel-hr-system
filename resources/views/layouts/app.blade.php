@@ -121,16 +121,25 @@
                             </ul>
                         </div>
                         <!-- User Menu -->
+                        @auth
                         <div class="dropdown">
                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i> {{ __('Profile') }}
+                                <i class="fas fa-user me-1"></i> {{ Auth::user()->name }}
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">{{ __('Settings') }}</a></li>
+                                <li><span class="dropdown-item-text">{{ Auth::user()->role }}</span></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">{{ __('Logout') }}</a></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">{{ __('Logout') }}</button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
+                        @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">{{ __('Login') }}</a>
+                        @endauth
                     </div>
                 </div>
                 
