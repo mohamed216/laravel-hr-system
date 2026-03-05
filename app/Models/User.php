@@ -28,6 +28,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     public function employee(): BelongsTo
@@ -43,21 +44,5 @@ class User extends Authenticatable
     public function isHR(): bool
     {
         return $this->role === 'hr';
-    }
-
-    public function setPasswordAttribute($value): void
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
-
-    public static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function ($user) {
-            if (empty($user->password)) {
-                $user->password = Hash::make('password');
-            }
-        });
     }
 }
