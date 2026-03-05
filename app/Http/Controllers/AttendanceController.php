@@ -24,6 +24,15 @@ class AttendanceController extends Controller
         return view('attendance.index', compact('attendances'));
     }
 
+    public function show(int $id)
+    {
+        $attendance = $this->attendanceRepository->getById($id);
+        if (!$attendance) {
+            return redirect()->route('attendance.index')->with('error', __('Attendance not found'));
+        }
+        return view('attendance.show', compact('attendance'));
+    }
+
     public function today()
     {
         $attendances = $this->attendanceRepository->getTodayAttendance();
