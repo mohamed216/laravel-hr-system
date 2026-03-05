@@ -12,6 +12,8 @@ class DepartmentController extends Controller
     public function __construct(DepartmentRepository $repository)
     {
         $this->repository = $repository;
+    }
+
     public function index()
     {
         $departments = $this->repository->getAll();
