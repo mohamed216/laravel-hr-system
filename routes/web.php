@@ -48,6 +48,16 @@ Route::middleware('auth')->group(function () {
 
     // Leave Requests - all logged in
     Route::resource('leave', LeaveRequestController::class);
+    Route::get('leave/pending', [LeaveRequestController::class, 'pending'])->name('leave.pending');
+    Route::post('leave/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leave.approve');
+    Route::post('leave/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leave.reject');
+
+    // Attendance - all logged in
+    Route::resource('attendance', AttendanceController::class);
+    Route::get('attendance/today', [AttendanceController::class, 'today'])->name('attendance.today');
+    Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+    Route::post('attendance/generate', [AttendanceController::class, 'generate'])->name('attendance.generate');
 
     // Payroll - admin/HR only
     Route::resource('payroll', PayrollController::class);
