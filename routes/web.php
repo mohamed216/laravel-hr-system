@@ -20,12 +20,12 @@ use App\Http\Controllers\PdfController;
 
 // Language
 Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
-
+Route::post('login', [AuthController::class, 'login']);
 // Auth
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
+Route::get('/', [DashboardController::class, 'index']);
 // Protected Routes
 Route::middleware('auth')->group(function () {
     // Dashboard
