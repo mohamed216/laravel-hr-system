@@ -105,3 +105,18 @@ Route::middleware('auth')->group(function () {
     Route::get('performance/employee/{employeeId}', [PerformanceReviewController::class, 'getByEmployee'])->name('performance.employee');
 });
 });
+
+
+// Export Routes
+Route::get('/export/employees/{format?}', [ExportController::class, 'exportEmployees'])->name('export.employees');
+Route::get('/export/attendance', [ExportController::class, 'exportAttendance'])->name('export.attendance');
+Route::get('/export/payroll', [ExportController::class, 'exportPayroll'])->name('export.payroll');
+
+// PDF Routes
+Route::get('/pdf/employee/{id}', [PdfController::class, 'generateEmployeePdf'])->name('pdf.employee');
+Route::get('/pdf/payroll/{id}', [PdfController::class, 'generatePayrollPdf'])->name('pdf.payroll');
+Route::get('/pdf/attendance', [PdfController::class, 'generateAttendancePdf'])->name('pdf.attendance');
+Route::get('/pdf/payslip/{id}', [PdfController::class, 'generatePayslipPdf'])->name('pdf.payslip');
+
+
+Route::post('/import/employees', [ExportController::class, 'importEmployees'])->name('import.employees');
