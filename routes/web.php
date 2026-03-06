@@ -72,7 +72,9 @@ Route::middleware('auth')->group(function () {
     });
 
     // Employees
-    Route::resource('employees', EmployeeController::class);
+    Route::middleware('App\Http\Middleware\AdminMiddleware')->group(function () {
+        Route::resource('employees', EmployeeController::class);
+    });
 
     // Departments
     Route::resource('departments', DepartmentController::class);
