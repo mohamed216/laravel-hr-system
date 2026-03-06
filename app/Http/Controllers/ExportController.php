@@ -43,8 +43,19 @@ class ExportController extends Controller
             ];
         });
 
-        return Excel::download(new class($data, ['Employee', 'Date', 'Check In', 'Check Out', 'Hours']), 
-            'attendance_' . $month . '_' . $year . '.xlsx');
+        return Excel::download(new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection {
+            private $data;
+            
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+            
+            public function collection()
+            {
+                return collect($this->data);
+            }
+        }, 'attendance_' . $month . '_' . $year . '.xlsx');
     }
 
     public function exportPayroll(Request $request)
@@ -68,10 +79,20 @@ class ExportController extends Controller
             ];
         });
 
-        return Excel::download(new class($data, ['Employee', 'Basic Salary', 'Bonuses', 'Deductions', 'Net Salary', 'Status']),
-            'payroll_' . $month . '_' . $year . '.xlsx');
+        return Excel::download(new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection {
+            private $data;
+            
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
+            
+            public function collection()
+            {
+                return collect($this->data);
+            }
+        }, 'payroll_' . $month . '_' . $year . '.xlsx');
     }
-}
 
     public function importEmployees(Request $request)
     {
@@ -83,3 +104,4 @@ class ExportController extends Controller
         
         return redirect()->route('employees.index')->with('success', 'Employees imported successfully');
     }
+}
