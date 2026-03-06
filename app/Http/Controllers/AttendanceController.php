@@ -46,6 +46,12 @@ class AttendanceController extends Controller
         return view('attendance.employee', compact('attendances', 'employee'));
     }
 
+    public function create()
+    {
+        $employees = $this->employeeRepository->getAll();
+        return view('attendance.create', compact('employees'));
+    }
+
     public function checkIn(Request $request)
     {
         $validated = $request->validate([
@@ -125,6 +131,16 @@ class AttendanceController extends Controller
 
         $this->attendanceRepository->update($attendance, $validated);
         return redirect()->route('attendance.index')->with('success', __('updated_successfully'));
+    }
+
+    public function edit(int $id)
+    {
+        $attendance = $this->attendanceRepository->getById($id);
+        if (!$attendance) {
+            return redirect()->route('attendance.index')->with('error', __('Attendance not found'));
+        }
+        $employees = $this->employeeRepository->getAll();
+        return view('attendance.edit', compact('attendance', 'employees'));
     }
 
     public function destroy(int $id)

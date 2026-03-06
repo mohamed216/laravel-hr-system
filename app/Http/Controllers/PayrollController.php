@@ -87,6 +87,41 @@ class PayrollController extends Controller
         return redirect()->route('payroll.index')->with('success', __('Payroll marked as paid'));
     }
 
+    public function edit(int $id)
+    {
+        $payroll = $this->payrollRepository->getById($id);
+        if (!$payroll) {
+            return redirect()->route('payroll.index')->with('error', __('Payroll not found'));
+        }
+        $employees = $this->employeeRepository->getAll();
+        return view('payroll.edit', compact('payroll', 'employees'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $payroll = $this->payrollRepository->getById($id);
+        if (!$payroll) {
+            return redirect()->route('payroll.index')->with('error', __('Payroll not found'));
+        }
+
+        $validated = $request->validate([
+            'basic_salary' => 'required|numeric|min:0',
+            'bonuses' => 'nullable|numeric|min:0',
+            'deductions' => 'nullable|numeric|min:0',
+        ]);
+
+        $netSalary = $this->payrollRepository->calculatePayroll(
+            $this->employeeRepository->getById($payroll->employee_id),
+            $validated['bonuses'] ?? 0,
+            $validated['deductions'] ?? 0
+        );
+
+        $validated['net_salary'] = $netSalary;
+
+        $this->payrollRepository->update($payroll, $validated);
+        return redirect()->route('payroll.index')->with('success', __('updated_successfully'));
+    }
+
     public function destroy(int $id)
     {
         $payroll = $this->payrollRepository->getById($id);

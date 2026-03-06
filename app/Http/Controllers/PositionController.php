@@ -79,4 +79,13 @@ class PositionController extends Controller
         $positions = $this->repository->getByDepartment($departmentId);
         return response()->json($positions);
     }
+
+    public function show(int $id)
+    {
+        $position = $this->repository->getById($id);
+        if (!$position) {
+            return redirect()->route('positions.index')->with('error', __('Position not found'));
+        }
+        return view('positions.show', compact('position'));
+    }
 }

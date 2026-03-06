@@ -69,6 +69,43 @@ class LeaveRequestController extends Controller
         return redirect()->route('leave.pending')->with('success', __('Leave request approved'));
     }
 
+    public function show(int $id)
+    {
+        $leaveRequest = $this->leaveRequestRepository->getById($id);
+        if (!$leaveRequest) {
+            return redirect()->route('leave.index')->with('error', __('Leave request not found'));
+        }
+        return view('leave.show', compact('leaveRequest'));
+    }
+
+    public function edit(int $id)
+    {
+        $leaveRequest = $this->leaveRequestRepository->getById($id);
+        if (!$leaveRequest) {
+            return redirect()->route('leave.index')->with('error', __('Leave request not found'));
+        }
+        $employees = $this->employeeRepository->getAll();
+        return view('leave.edit', compact('leaveRequest', 'employees'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $leaveRequest = $this->leaveRequestRepository->getById($id);
+        if (!$leaveRequest) {
+            return redirect()->route('leave.index')->with('error', __('Leave request not found'));
+        }
+
+        $validated = $request->validate([
+            'type' => 'required|in:vacation,sick,unpaid,maternity,paternity',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'required|string',
+        ]);
+
+        $this->leaveRequestRepository->update($leaveRequest, $validated);
+        return redirect()->route('leave.index')->with('success', __('updated_successfully'));
+    }
+
     public function reject(int $id, Request $request)
     {
         $leaveRequest = $this->leaveRequestRepository->getById($id);
