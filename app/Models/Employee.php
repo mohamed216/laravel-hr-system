@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
 class Employee extends Model
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, SoftDeletes;
 
     protected $fillable = [
         'name', 'email', 'phone', 'address', 'department_id', 'position_id',

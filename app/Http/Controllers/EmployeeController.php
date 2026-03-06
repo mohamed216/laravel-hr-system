@@ -16,7 +16,7 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        $employees = \App\Models\Employee::with(['department', 'position'])->paginate(10);
+        $employees = $this->repository->getAllPaginated(10);
         return view('employees.index', compact('employees'));
     }
 

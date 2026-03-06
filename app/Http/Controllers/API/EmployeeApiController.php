@@ -4,15 +4,21 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Http\Resources\EmployeeResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['login']);
+    }
+
     public function index()
     {
         $employees = Employee::with(['department', 'position'])->get();
-        return response()->json($employees);
+        return EmployeeResource::collection($employees);
     }
 
     public function store(Request $request)
@@ -37,7 +43,7 @@ class EmployeeApiController extends Controller
         if (!$employee) {
             return response()->json(['message' => 'Employee not found'], 404);
         }
-        return response()->json($employee);
+        return new EmployeeResource($employee);
     }
 
     public function update(Request $request, int $id)
@@ -59,7 +65,7 @@ class EmployeeApiController extends Controller
         ]);
 
         $employee->update($validated);
-        return response()->json($employee);
+        return new EmployeeResource($employee->fresh(['department', 'position']));
     }
 
     public function destroy(int $id)

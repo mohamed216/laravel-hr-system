@@ -21,7 +21,7 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::with('employee')->get();
+        $users = User::with('employee')->paginate(15);
         return view('admin.users', compact('users'));
     }
 

@@ -12,6 +12,11 @@ class EmployeeRepository
         return Employee::with(['department', 'position'])->get();
     }
 
+    public function getAllPaginated(int $perPage = 10)
+    {
+        return Employee::with(['department', 'position'])->paginate($perPage);
+    }
+
     public function getById(int $id): ?Employee
     {
         return Employee::with(['department', 'position'])->find($id);
