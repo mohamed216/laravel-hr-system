@@ -17,8 +17,6 @@ class LanguageController extends Controller
 
         app()->setLocale($locale);
         session(['locale' => $locale]);
-        
-        // Set RTL for Arabic
         session(['rtl' => $locale === 'ar']);
 
         return redirect()->back();
