@@ -18,6 +18,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PdfController;
 
+// Clear route cache when accessing
+Route::get('/clear-cache', function () {
+    \Illuminate\Support\Facades\Artisan::call('route:clear');
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    return redirect('/');
+})->name('clear.cache');
+
 // Language Routes
 Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
 
