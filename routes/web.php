@@ -18,59 +18,48 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PdfController;
 
-// Clear route cache when accessing
-Route::get('/clear-cache', function () {
-    \Illuminate\Support\Facades\Artisan::call('route:clear');
-    \Illuminate\Support\Facades\Artisan::call('config:clear');
-    \Illuminate\Support\Facades\Artisan::call('cache:clear');
-    return redirect('/');
-})->name('clear.cache');
-
-// Language Routes
+// Language
 Route::get('language/{locale}', [LanguageController::class, 'setLocale'])->name('language.switch');
 
-// Auth Routes
-Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AuthController::class, 'login']);
-});
+// Auth
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+// Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [DashboardController::class, 'index']);
 
-    // Employees - all logged in users can access
+    // Employees
     Route::resource('employees', EmployeeController::class);
 
-    // Departments - admin/HR only
+    // Departments
     Route::resource('departments', DepartmentController::class);
 
-    // Positions - admin/HR only
+    // Positions
     Route::resource('positions', PositionController::class);
 
-    // Attendance - all logged in
-    Route::resource('attendance', AttendanceController::class);
-
-    // Leave Requests - all logged in
-    Route::resource('leave', LeaveRequestController::class);
-    Route::get('leave/pending', [LeaveRequestController::class, 'pending'])->name('leave.pending');
-    Route::post('leave/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leave.approve');
-    Route::post('leave/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leave.reject');
-
-    // Attendance - all logged in
+    // Attendance
     Route::resource('attendance', AttendanceController::class);
     Route::get('attendance/today', [AttendanceController::class, 'today'])->name('attendance.today');
     Route::post('attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
     Route::post('attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
     Route::post('attendance/generate', [AttendanceController::class, 'generate'])->name('attendance.generate');
 
-    // Payroll - admin/HR only
-    Route::resource('payroll', PayrollController::class);
+    // Leave
+    Route::resource('leave', LeaveRequestController::class);
+    Route::get('leave/pending', [LeaveRequestController::class, 'pending'])->name('leave.pending');
+    Route::post('leave/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leave.approve');
+    Route::post('leave/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leave.reject');
 
-    // Performance - admin/HR only
+    // Payroll
+    Route::resource('payroll', PayrollController::class);
+    Route::post('payroll/generate', [PayrollController::class, 'generate'])->name('payroll.generate');
+    Route::post('payroll/{id}/mark-paid', [PayrollController::class, 'markAsPaid'])->name('payroll.markPaid');
+
+    // Performance
     Route::resource('performance', PerformanceReviewController::class);
 
     // Export/Import
@@ -85,7 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pdf/attendance', [PdfController::class, 'generateAttendancePdf'])->name('pdf.attendance');
     Route::get('/pdf/payslip/{id}', [PdfController::class, 'generatePayslipPdf'])->name('pdf.payslip');
 
-    // Admin Routes (Admin only)
+    // Admin Only
     Route::middleware('App\Http\Middleware\AdminMiddleware')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
@@ -94,17 +83,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
         Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
-        
-        // Reports
         Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
         Route::get('/admin/reports/employees', [ReportController::class, 'employees'])->name('admin.reports.employees');
-        
-        // Settings
         Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings');
         Route::post('/admin/settings', [SettingController::class, 'update'])->name('admin.settings.update');
         Route::post('/admin/settings/clear-cache', [SettingController::class, 'clearCache'])->name('admin.settings.clearCache');
-        
-        // Activity Logs
         Route::get('/admin/activity', [ActivityController::class, 'index'])->name('admin.activity');
     });
 });
